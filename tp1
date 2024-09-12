@@ -1,0 +1,127 @@
+Ejercicio 2
+Realice una solución concurrente de grano grueso (utilizando <> y/o <await B; S>) para el
+siguiente problema. Dado un número N, verifique cuantas veces aparece ese número en un
+arreglo de longitud M.
+
+// N: numero a buscar
+// M: longitud del arreglo
+// El arrelgo empieza en 1
+
+int contador = 0
+process Buscador [id: 1..M]{ // Sería mejor acostumbrarme a 0..M-1
+    if(arreglo[id] == N)
+        < contador++ >
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+Ejercicio 3
+Resolver con SENTENCIAS AWAIT (<> y <await B; S>). Un sistema operativo mantiene
+5 instancias de un recurso almacenadas en una cola, cuando un proceso necesita usar una
+instancia del recurso la saca de la cola, la usa y cuando termina de usarla la vuelve a depositar. 
+
+// Declaracion de variables
+cola queue;
+int cant = 5;
+inst instancia;
+
+process Proceso [id: 0..4] {
+    <if(cant > 0) pop(queue, instancia); cant--; >
+    // Usar recurso
+    < push(queue, instancia); cant++; >
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+5. En cada ítem debe realizar una solución concurrente de grano grueso (utilizando <> y/o
+<await B; S>) para el siguiente problema, teniendo en cuenta las condiciones indicadas en el
+item. Existen N personas que deben imprimir un trabajo cada una.
+
+a) Implemente una solución suponiendo que existe una única impresora compartida por
+todas las personas, y las mismas la deben usar de a una persona a la vez, sin importar el
+orden. Existe una función Imprimir(documento) llamada por la persona que simula el uso
+de la impresora. Sólo se deben usar los procesos que representan a las Personas.
+
+b) Modifique la solución de (a) para el caso en que se deba respetar el orden de llegada.
+
+c) Modifique la solución de (a) para el caso en que se deba respetar el orden dado por el
+identificador del proceso (cuando está libre la impresora, de los procesos que han
+solicitado su uso la debe usar el que tenga menor identificador).
+
+d) Modifique la solución de (b) para el caso en que además hay un proceso Coordinador que
+le indica a cada persona que es su turno de usar la impresora
+
+------------------------------------------------------------------------------
+a)
+// Declaracion de variables
+bool libre = true;
+
+process Persona [id: 0..N-1] {
+    < await(libre); libre = false; > // Espero a que se libere el recurso, una vez que sucede lo tomo y enseguida lo marco como ocupado
+    Imprimir(documento)
+    libre = true; // Termino de usar el recurso, debo liberarlo
+}
+
+------------------------------------------------------------------------------
+
+b)
+// Declaracion de variables
+cola queue;
+int siguiente = -1;
+
+process PersonaB [id: 0..N-1] {
+    < if(siguiente <> -1) // Se esta usando la impresora asique me tengo que encolar.
+        push(queue, id)
+      else siguiente = id > // No hay nadie en la cola asique me autoasigno el turno para usar la impresora.
+
+    < await(siguiente==id); > // Espero a que me toque mi turno.
+    Imprimir(documento)
+    < if(empty(queue)) siguiente = -1; // Si la cola esta vacia (no quedan personas esperando) reseteo siguiente en -1.
+      else pop(queue, siguiente) > // Si la cola no esta vacia (quedan personas esperando) le cedo el lugar al que esta atras mio.
+}
+
+------------------------------------------------------------------------------
+
+c)
+// Declaracion de variables
+cola queue;
+int siguiente = -1;
+
+process PersonaC [id: 0..N-1] {
+    < if(siguiente <> -1) // Se esta usando la impresora asique me tengo que encolar.
+        pushOrdenado(queue, id) // Se agrega a la cola de forma ordenada por id (podria mandarle como parametros queue, id, id) asi tambien le mando el criterio de ordenacion
+      else siguiente = id > // No hay nadie en la cola asique me autoasigno el turno para usar la impresora.
+
+    < await(siguiente==id); > // Espero a que me toque mi turno.
+    Imprimir(documento)
+    < if(empty(queue)) siguiente = -1; // Si la cola esta vacia (no quedan personas esperando) reseteo siguiente en -1.
+      else pop(queue, siguiente) > // Si la cola no esta vacia (quedan personas esperando) le cedo el lugar al que esta atras mio.
+}
+
+// Elegi agregar a la cola de forma ordenada porque es lo mas convencional, pero tambien podria haber agregado de forma desordenada y popeado de forma ordenada.
+
+------------------------------------------------------------------------------
+d) Modifique la solución de (b) para el caso en que además hay un proceso Coordinador que
+le indica a cada persona que es su turno de usar la impresora
+
+// Declaracion de variables
+cola queue;
+int aviso = 0;
+int turno = -1;
+int arreglo[N] = {[N] 0} // Inicializa el arreglo de N en 0
+
+process PersonaD [id: 0..N-1] {
+    < push(queue, id); aviso++ > // Se agrega a la cola y avisa al coordinador que está esperando
+    < await(turno==id); > // Espero a que sea mi turno
+    Imprimir(documento)
+    arreglo[id] = 1; // Indica que termino de usar el recurso
+}
+
+process Coordinador {
+    for i = 0 to N-1 {
+        < await(aviso > 0); pop(queue, turno); aviso--; >
+            < await(arreglo[turno]==1); > // Indicaria que termino su turno
+    }
+}
+
+
+------------------------------------------------------------------------------
