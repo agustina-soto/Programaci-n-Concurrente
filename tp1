@@ -5,9 +5,8 @@ arreglo de longitud M.
 
 // N: numero a buscar
 // M: longitud del arreglo
-// El arrelgo empieza en 1
 
-int contador = 0
+int arreglo[1..M]; int contador = 0; int N = numero a buscar;
 process Buscador [id: 1..M]{ // Sería mejor acostumbrarme a 0..M-1
     if(arreglo[id] == N)
         < contador++ >
@@ -107,7 +106,7 @@ le indica a cada persona que es su turno de usar la impresora
 cola queue;
 int aviso = 0;
 int turno = -1;
-int arreglo[N] = {[N] 0} // Inicializa el arreglo de N en 0
+int arreglo[N] = {[N] 0} // Inicializa el arreglo de N elementos en 0
 
 process PersonaD [id: 0..N-1] {
     < push(queue, id); aviso++ > // Se agrega a la cola y avisa al coordinador que está esperando
