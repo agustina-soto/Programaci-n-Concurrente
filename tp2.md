@@ -20,6 +20,7 @@ c. Modifique su solución para el caso que haya tres detectores.
     Sincronización: El semáforo permite que las personas esperen si el detector está ocupado y que solo una persona lo use a la vez.
 ```
 
+
 ```c
 1.b)
     sem mutex_detector = 1;
@@ -31,6 +32,7 @@ c. Modifique su solución para el caso que haya tres detectores.
     }
 ```
 
+
 ```c
 1.c)
     sem mutex_detector = 3; // Se decrementa por si sola la funcion, cuando no hayan detectores libres queda automaticamente en 0
@@ -41,6 +43,7 @@ c. Modifique su solución para el caso que haya tres detectores.
         V(mutex_detector);
 }
 ```
+
 
 ```c
 1.d)
@@ -55,6 +58,7 @@ c. Modifique su solución para el caso que haya tres detectores.
         }
     }
 ```
+
 
 
 ## Ejercicio 2
