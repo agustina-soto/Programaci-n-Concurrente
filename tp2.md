@@ -20,8 +20,8 @@ c. Modifique su solución para el caso que haya tres detectores.
     Sincronización: El semáforo permite que las personas esperen si el detector está ocupado y que solo una persona lo use a la vez.
 ```
 
-1.b)
 ```c
+1.b)
     sem mutex_detector = 1;
     
     Process Persona [id: 0..N-1] {
@@ -31,8 +31,8 @@ c. Modifique su solución para el caso que haya tres detectores.
     }
 ```
 
-1.c)
 ```c
+1.c)
     sem mutex_detector = 3; // Se decrementa por si sola la funcion, cuando no hayan detectores libres queda automaticamente en 0
 
     Process Persona [id: 0..N-1] {
@@ -42,8 +42,8 @@ c. Modifique su solución para el caso que haya tres detectores.
 }
 ```
 
-1.d)
 ```c
+1.d)
     sem mutex_detector = 3; // Se decrementa por si sola la funcion, cuando no hayan detectores libres queda automaticamente en 0
 
     Process Persona [id: 0..N-1] {
@@ -71,8 +71,8 @@ gravedad determinado
 
 ### RESPUESTA:
 
-2.a)
 ```c
+2.a)
     int N = cantidad_de_fallos_del_dia_anterior;
     colaFallos historial[N]; // Asumo que fue inicializada con los fallos del dia anterior
 
@@ -101,8 +101,8 @@ gravedad determinado
     }
 ```
 
-2.b)
 ```c
+2.b)
     int N = cantidad_de_fallos_del_dia_anterior;
     colaFallos historial[N]; // Asumo que fue inicializada con los fallos del dia anterior
 
@@ -139,8 +139,8 @@ gravedad determinado
     }
 ```
 
-2.c)
 ```c
+2.c)
     int N = cantidad_de_fallos_del_dia_anterior;
     colaFallos historial[N]; // Asumo que fue inicializada con los fallos del dia anterior
 
@@ -213,7 +213,6 @@ Process proceso[id: 0..P-1] {
 ```
 
 
-
 ## Ejercicio 4
 Suponga que existe una BD que puede ser accedida por 6 usuarios como máximo al mismo tiempo. Además, los usuarios se clasifican como usuarios de prioridad alta y usuarios de prioridad baja. Por último, la BD tiene la siguiente restricción:
 * no puede haber más de 4 usuarios con prioridad alta al mismo tiempo usando la BD.
@@ -242,7 +241,7 @@ baja: semaphoro := 5
 <tr>
  <td rowspan=4>
 
-```cpp
+```c
  { P (sem);
  P (alta);
  //usa la BD
@@ -254,7 +253,7 @@ baja: semaphoro := 5
 </td>
  <td rowspan=4>
 
-```cpp
+```c
 { P (sem);
  P (baja);
 //usa la BD
@@ -299,8 +298,9 @@ Tanto el Preparador como el Entregador trabajan de a un paquete por vez.
  QUE NO LE MANDO A PREPARADORES NI A ENTREGADORES QUÉ RECURDO ESPECÍFICO TIENEN QUE TOMAR), O SI DEBERÍA USAR UNA 
  COLA QUE ENCOLE LOS "IDS" DE LOS CONTENEDORES, O SI DEBERÍA TENER UN ARREGLO CON EL QUE PROTEGA LOS CONTENEDORES...
 
+
+```c
 5.a)
-```cpp
 sem contenedor_vacio = N;
 sem contenedor_lleno = 0;
 
@@ -323,8 +323,8 @@ Process Entregador {
 }
 ´´´
 
+```c
 5.b)
-```cpp
 sem contenedor_vacio = N;
 sem contenedor_lleno = 0;
 sem mutex = 1;
@@ -350,8 +350,8 @@ Process Entregador {
 }
 ´´´
 
+```c
 5.c)
-```cpp
 sem contenedor_vacio = N;
 sem contenedor_lleno = 0;
 sem mutex = 1;
@@ -377,8 +377,8 @@ Process Entregador[id:0..E-1] {
 }
 ´´´
 
+```c
 5.d)
-```cpp
 sem contenedor_vacio = N;   // Número de contenedores vacíos, empieza en N - vi una solucion que ponia esto en 1, por que?? si hay N, tengo que poder sacar N...
 sem contenedor_lleno = 0;   // Número de contenedores llenos, empieza en 0
 sem mutex = 1;              // Exclusión mutua compartida por ambos, preparadores y entregadores
@@ -422,8 +422,8 @@ Existen N personas que deben imprimir un trabajo cada una. Resolver cada ítem u
 
 ### RESPUESTA:
 
+```c
 6.a)
-```cpp
 sem mutex_impresora = 1; // Las personas usan una misma impresora, de a una persona a la vez
 
 Process Persona[id:0..N-1] {
@@ -434,9 +434,8 @@ Process Persona[id:0..N-1] {
 }
 ```
 
-
+```c
 6.b)
-```cpp
 cola colaImpresora;
 boolean libre = true; // Estado de la impresora
 sem mutex = 1;
@@ -471,8 +470,8 @@ Process Persona[id:0..N-1] {
 }
 ```
 
+```c
 6.c)
-```cpp
 sem espera_turno[N] = ([N] 0); // Las personas van a esperar hasta que el proceso "id-1" los despierte
 int turno = 0;
 
@@ -487,8 +486,8 @@ Process Persona[id:0..N-1] {
 }
 ```
 
+```c
 6.d)
-```cpp
 cola colaImpresora;
 sem mutex_cola = 1;
 sem espera_turno [N] = ([N] 0); // Necesito que las personas esperen a que se les otorgue su turno
@@ -527,8 +526,8 @@ Process Coordinador {
 }
 ```
 
+```c
 6.e)
-```cpp
 cola colaIdProcesos, colaImpresoras;
 int id_impresoras[N];
 sem mutex_cola = 1, mutex_impresoras = 1;
@@ -591,7 +590,7 @@ _**Nota:**_ Para elegir la tarea suponga que existe una función `elegir` que le
 
 ### RESPUESTA:
 
-```cpp
+```c
 int contador = 0;
 int puntajeGrupo[10] = ([10] 0);
 cola finalizadas; // Cola con las tareas finalizadas
@@ -657,7 +656,7 @@ fábrica empieza a producir una vez que todos los empleados llegaron. Mientras h
 
 ### RESPUESTA:
 
-```cpp
+```c
 sem mutex_piezas = 1; // Acceso a cantidad de piezas producidas
 sem mutex_contador = 1; // Acceso a contador para la barrera de empleados
 
@@ -730,7 +729,7 @@ Resolver el funcionamiento en una fábrica de ventanas con 7 empleados (4 carpin
 
 ### RESPUESTA:
 
-```cpp
+```c
 sem mutex_deposito_vidrios = 1;
 sem mutex_deposito_marcos = 1;
 sem mutex_deposito_ventanas = 1;
@@ -820,8 +819,8 @@ importa el orden de llegada para descargar. Nota: maximice la concurrencia.
 
 ### RESPUESTA:
 
+```c
 10.b)
-```cpp
 sem mutex = 1, lugar_maiz = 5, lugar_trigo = 5, lugares = 7; 
 
 int cantLugares = 0;
@@ -857,9 +856,8 @@ Process CamionMaiz[id:0..M-1]
 }
 ```
 
+```c
 10.a) LO EMPECÉ PERO NO LO TERMINÉ (ni cerca)
-
-```cpp
 sem capacidad_camiones = 7, lugar_trigo = 5, lugar_maiz = 5, llego_camion = 0;
 sem mutex_cola = 1;
 
@@ -921,7 +919,7 @@ _**Nota:**_ todos los procesos deben terminar su ejecución; asegurarse de no re
 
 ### RESPUESTA:
 
-```cpp
+```c
 cola c;
 int cant_personas_vacunadas = 0, cant_personas_esperando = 0;
 
@@ -993,8 +991,8 @@ parte de la enfermera correspondiente.
 _// ASUMO QUE EXISTE LA FUNCIÓN "PuestoConMenosPasajeros()" QUE DEVUELVE EL PUESTO (LA COLA) QUE TIENE MENOS PASAJEROS ESPERANDO_
 
 
+```c
 12.a)
-```cpp
 int cantP = 0;
 cola recepcion, puesto[0..2];
 sem mutex_recep = 1, mutex_hisopar[0..2] = ({3} 1);
@@ -1066,8 +1064,8 @@ Process Enfermera[id:0..2] {
 }
 ```
 
+```c
 12.b)
-```cpp
 int cantP = 0;
 cola cola_espera[3];
 sem mutex = 1, mutex_cola[3] = ([3] 1), mutex_hisopar = 1;
