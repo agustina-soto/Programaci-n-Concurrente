@@ -12,8 +12,8 @@ c. Modifique su solución para el caso que haya tres detectores.
 
 ### RESPUESTA:
 
-1.a)
 ```c
+1.a)
     Procesos: Las N personas que desean pasar por el detector.
     Recursos: El detector de metales (un recurso compartido que solo puede ser utilizado por un proceso a la vez).
     Semáforo: Un semáforo binario (o de exclusión mutua) que garantiza que solo una persona acceda al detector a la vez. Se inicializa en 1.
