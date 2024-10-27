@@ -22,15 +22,15 @@ Process Empleado {
   int i, idCliente, nroCabina; boolean cabinasLibres[10] = {[10] true}; Ticket ticket;
 
   while(true) {
-    //BW 
-    if(empty(filaPagar))
+    //BW
+    if(empty(filaPagar)) ->
       if ((not empty(llegada)) and (hayCabinaLibre(cabinasLibres))) {
         receive(llegada(idCliente)); //Espera a que llegue un cliente
         nroCabina = getRandomNroCabinaDisponible(cabinasLibres); //Obtiene un nro de cabina de las disponibles del arreglo
         cabinasLibres[nroCabina] = false; //Marca cabina como ocupada para que no se pueda volver a pedir por la funcion "getRandomNroCabinaDisponible" hasta que se libere
         send(asignarCabina[idCliente](nroCabina)); //Avisa al cliente a qué cabina tiene que ir
       }
-    [] (not empty (filaPagar))
+    [] (not empty (filaPagar)) ->
         receive(cabinaDisponible(nroCabina)); // Espera a que el cliente le avise que terminó de usar la cabina
         receive(filaPagar(idCliente));
         cabinasLibres[nroCabina] = true; //Libera la cabina utilizada
