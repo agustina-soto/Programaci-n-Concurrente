@@ -15,13 +15,15 @@ Process Cliente[id:0..C-1] {
 Process Vendedor[id:0..2] {
  int idCliente; texto pedido;
 
- send(vendedorLibre(id)); //Avisa que está libre
- receive(atenderPedido[id](idCliente, pedido)); //Espera a que le avisen que hay un pedido
-
- if(idCliente <> -1) //Nro de cliente válido
-   send(cocinarPedido(idCliente, pedido)); //Pasa pedido a los cocineros
- else
-   reponerPackBebidas(delay(60..180)); //Repone pack de bebidas en un lapso que varía entre 1 y 3 minutos
+ while(true) {
+   send(vendedorLibre(id)); //Avisa que está libre
+   receive(atenderPedido[id](idCliente, pedido)); //Espera a que le avisen que hay un pedido
+  
+   if(idCliente <> -1) //Nro de cliente válido
+     send(cocinarPedido(idCliente, pedido)); //Pasa pedido a los cocineros
+   else
+     reponerPackBebidas(delay(60..180)); //Repone pack de bebidas en un lapso que varía entre 1 y 3 minutos
+ }
 }
 
 Process Coordinador {
@@ -29,7 +31,7 @@ Process Coordinador {
 
  while(true) {
    receive(vendedorLibre(idVendedor)); //Espera a que haya un vendedor libre
-   if(empty(pedido)) idCliente = -1, pedido = null; // Setea id inválido
+   if(empty(pedido)) idCliente = -1; // Setea id inválido
    else receive(pedido(idCliente, pedido)); //Recibe el idCliente y su pedido
    send(atenderPedido[idVendedor](idCliente, pedido)); //Envía idCliente y su pedido a un vendedor
  }
