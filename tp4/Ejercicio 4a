@@ -7,7 +7,7 @@ chan liberarCabina; //Cliente avisa a Empleado que liberó la cabina que estaba 
 chan envioTicket[int](Ticket); //Empleado envía a Cliente el ticket del cobro
 
 Process Empleado {
- int i, idCliente; boolean cabinasLibres[10] = {[10] true}; Ticket ticket;
+ int i, idCliente, nroCabina; boolean cabinasLibres[10] = {[10] true}; Ticket ticket;
 
  while(true) {
    receive(llegada(idCliente)); //Espera a que llegue un cliente
