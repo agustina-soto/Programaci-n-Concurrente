@@ -15,17 +15,19 @@ Process Administrativo[id:0..N-1] {
 }
 
 Process Impresora[id:0..2] {
-    texto doc;
-    while(true) {
+    texto doc; int cant_impresiones = 0, limite = N*10;
+    while(cant_impresiones < limite) {
         //BW
         if(empty(colaImpresionPrioritaria)) ->
             if(not empty(colaImpresion)) {
                 receive(colaImpresion(doc)); //Si hay un doc en la cola no prioritaria, lo recibe
                 imprimirDocumento(doc); //Imprime
+                cant_impresiones++; //Incrementa cantidad de documentos impresos
             }
         [] (not empty(colaImpresionPrioritaria)) ->
             receive(colaImpresionPrioritaria(doc)); //Si hay un doc en la cola prioritaria, lo recibe
             imprimirDocumento(doc); //Imprime
+            cant_impresiones++; //Incrementa cantidad de documentos impresos
     }
 }
 
