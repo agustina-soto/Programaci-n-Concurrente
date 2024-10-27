@@ -29,7 +29,7 @@ Process Cliente[id:0..N-1] {
 
  send(llegada(id)); //Avisa que llegó
  receive(asignarCabina[id](nroCabina)); //Espera a que el empleado le diga a qué cabina ir
- comprobante = usarCabina(nroCabina);
+ usarCabina(nroCabina);
  send(liberarCabina()); //Avisa al empleado que liberó la cabina
  receive(envioTicket[id](ticket)); //Espera a que le envíen el ticket factura
 }
