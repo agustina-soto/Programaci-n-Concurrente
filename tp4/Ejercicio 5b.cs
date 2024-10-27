@@ -1,5 +1,7 @@
 /** b) Modifique la solución implementada para que considere la presencia de un director de
-oficina que también usa las impresoras, el cual tiene prioridad sobre los administrativos. **/
+oficina que también usa las impresoras, el cual tiene prioridad sobre los administrativos.
+
+Nota: ni los administrativos ni el director deben esperar a que se imprima el documento. **/
 
 chan colaImpresion(texto); //Administrativos envían documentos a esta cola de impresión
 chan colaImpresionPrioritaria(texto); //Director envía sus documentos a esta cola prioritaria
