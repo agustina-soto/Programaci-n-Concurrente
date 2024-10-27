@@ -1,4 +1,9 @@
-a) Sin prioridades.
+/** 4. Simular la atención en un locutorio con 10 cabinas telefónicas, el cual tiene un empleado
+que se encarga de atender a N clientes. Al llegar, cada cliente espera hasta que el empleado
+le indique a qué cabina ir, la usa y luego se dirige al empleado para pagarle. El empleado
+atiende a los clientes en el orden en que hacen los pedidos. A cada cliente se le entrega un
+ticket factura por la operación.
+a) Implemente una solución para el problema descrito (sin prioridades). **/
 
 
 chan llegada(int); //Clientes avisan que llegaron
