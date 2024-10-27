@@ -5,8 +5,8 @@ Nota: ni los administrativos ni el director deben esperar a que se imprima el do
 chan colaImpresion(texto); //Administrativos envían documentos a esta cola de impresión
 
 Process Administrativo[id:0..N-1] {
-    texto doc; int cant_doc = 0;
-    while(cant_doc < 10) { //Imprime 10 documentos
+    texto doc; int cant_docs = 0;
+    while(cant_docs < 10) { //Imprime 10 documentos
         doc = generarDoc();
         send(colaImpresion(doc)); //Envía documento a imprimir
     }
