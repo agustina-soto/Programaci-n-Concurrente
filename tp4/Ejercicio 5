@@ -2,9 +2,6 @@ a) Implemente una solución para el problema descrito.
 
 
 chan colaImpresion(texto); //Administrativos envían documentos a esta cola de impresión
-chan impresoraLibre(int); //Impresoras avisan cuando están libres
-chan siguiente(texto); //Impresoras reciben el siguiente documento a imprimir
-
 
 Process Administrativo[id:0..N-1] {
     texto doc;
@@ -14,23 +11,10 @@ Process Administrativo[id:0..N-1] {
     }
 }
 
-
 Process Impresora[id:0..2] {
     texto doc;
-    
-    send(impresoraLibre(id));
-    receive[id](doc);
-    imprimirDocumento(doc);
-}
-
-
-Process Coordinador {
-    int id; texto doc;
-
     while(true) {
-        receive(impresoraLibre(id)); //Recibe primera impresora disponible
-        if(empty(colaImpresion)) doc = "VACIO"; //Si no hay docs pendientes asigna valor "inválido"
-        else receive(colaImpresion(doc)); //Si hay docs pendientes recibe la información
-        send(siguiente[id](doc)); //Envía el documento a imprimir a la primera impresora disponible
+        receive(colaImpresion(doc)); //Espera a que haya un documento a imprimir
+        imprimirDocumento(doc); //Imprime
     }
 }
