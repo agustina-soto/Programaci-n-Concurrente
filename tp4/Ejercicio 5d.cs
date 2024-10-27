@@ -15,7 +15,7 @@ Process Administrativo[id:0..N-1] {
 }
 
 Process Impresora[id:0..2] {
-    texto doc; int cant_impresiones = 0, limite = N*10;
+    texto doc; int cant_impresiones = 0, limite = N*10 + 10;
     while(cant_impresiones < limite) {
         //BW
         if(empty(colaImpresionPrioritaria)) ->
