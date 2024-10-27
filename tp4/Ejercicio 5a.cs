@@ -1,4 +1,8 @@
-a) Implemente una solución para el problema descrito.
+/** Resolver la administración de 3 impresoras de una oficina. Las impresoras son usadas por N
+administrativos, los cuales están continuamente trabajando y cada tanto envían documentos
+a imprimir. Cada impresora, cuando está libre, toma un documento y lo imprime, de
+acuerdo con el orden de llegada.
+a) Implemente una solución para el problema descrito. **/
 
 
 chan colaImpresion(texto); //Administrativos envían documentos a esta cola de impresión
