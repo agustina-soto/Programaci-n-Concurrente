@@ -17,7 +17,7 @@ Process Impresora[id:0..2] {
     texto doc; boolean continuar = true;
     while(continuar) {
         receive(pedido(doc)); //Espera a que haya un documento a imprimir
-        if(doc <> "FIN") imprimirDocumento(doc); //Imprime
+        if(doc <> "FIN") imprimirDocumento(doc); //Si es válido lo imprime, sino corta la ejecución del proceso
         else continuar = false;
     }
 }
@@ -25,18 +25,16 @@ Process Impresora[id:0..2] {
 Process Coordinador {
     int i, id; texto doc; int contador = 0;
 
-    while (contador < N*10) { //Sigue siendo BW esto no? :/ no se me ocurre cómo mejorarlo
-        if(not empty(pedido)) { //Si hay pedidos
-            receive(pedido(doc)); //Recibe el pedido
-            
-            //Envía pedido a alguna impresora (aleatoria entre las disponibles)
-            if(empty(colaImpresora[0])) -> send(colaImpresora[0](doc));
-            [] if(empty(colaImpresora[1])) -> send(colaImpresora[1](doc));
-            [] if(empty(colaImpresora[2])) -> send(colaImpresora[2](doc));
-            end if
+    while (contador < N*10) {
+        receive(pedido(doc)); //Recibe el pedido
 
-            contador++;
-        }
+        //Envía pedido a alguna impresora (aleatoria entre las disponibles)
+        if(empty(colaImpresora[0])) -> send(colaImpresora[0](doc));
+        [] (empty(colaImpresora[1])) -> send(colaImpresora[1](doc));
+        [] (empty(colaImpresora[2])) -> send(colaImpresora[2](doc));
+        end if
+
+        contador++;
     }
 
     for i in 0..2 {
