@@ -39,24 +39,16 @@ Process Coordinador {
 
     while (contador < N*10+10) {
         receive Signal(); //Espera a que alguien necesite una impresora. Va a entrar si o si al if-[]
-        if(not empty(pedidosConPrioridad)) ->
+        
+        if(not empty(pedidosConPrioridad)) -> //Si hay pedidos con prioridad
             receive(pedidoConPrioridad(doc)); //Recibe el pedido prioritario
-            
-            //Envía pedido a alguna impresora (aleatoria entre las disponibles)
-            if(empty(colaImpresora[0])) -> send(colaImpresora[0](doc));
-            [] if(empty(colaImpresora[1])) -> send(colaImpresora[1](doc));
-            [] if(empty(colaImpresora[2])) -> send(colaImpresora[2](doc));
-            end if
-
         [] (empty(pedidosConPrioridad) and (not empty(pedidos)))-> //Si no tengo pedidos con prioridad pero tengo pedidos normales
             receive(pedido(doc)); //Recibe el pedido normal
-
             //Envía pedido a alguna impresora (aleatoria entre las disponibles)
             if(empty(colaImpresora[0])) -> send(colaImpresora[0](doc));
             [] if(empty(colaImpresora[1])) -> send(colaImpresora[1](doc));
             [] if(empty(colaImpresora[2])) -> send(colaImpresora[2](doc));
             end if
-
         endif
 
         contador++;
