@@ -10,4 +10,30 @@ b) Implemente una solución con PMS sin tener en cuenta el orden de los pedidos.
 c) Modifique el inciso (b) para que el Analizador resuelva los pedidos en el orden
 en que se hicieron. **/
 
-**a)**
+*(b)*
+Process Examinador[id:0..R-1] {
+    texto sitioWeb;
+    while(true) {
+        sitioWeb = buscarVirus();
+        Buffer!sitio(sitioWeb); //Envía sitio posiblemente infectado
+}
+
+Process Analizador {
+    texto sitioWeb;
+    while(true) {
+        Buffer!avisoDisponible(); //Avisa que está disponible para recibir un pedido
+        Buffer?sitio(sitioWeb); //Recibe un sitio a verificar
+        analizarSitio(sitioWeb); //Verifica si está infectado
+    }
+}
+
+Process Buffer {
+    texto sitioWeb; cola Buffer;
+    do Examinador?sitio(sitioWeb) -> push (Buffer, sitioWeb); //Recibe un sitio y lo agrega a la fila de sitios a analizar
+    [] not empty(Buffer); Analizador?avisoDisponible() -> Analizador!hacerPrueba(popRanom (Buffer)); //Si el Buffer no está vacío, espera a que el Analizador avise que está listo para recibir un pedido. Sólo si el buffer no está vacío (el examinador ha hecho un pedido y fue cargado en el buffer) y si el analizador está listo para recibir un pedido nuevo, se toma aleatoriamente un pedido del buffer y se lo envía al Analizador
+    od
+    }
+}
+
+
+**(c)**
