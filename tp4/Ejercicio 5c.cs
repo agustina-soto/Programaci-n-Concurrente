@@ -2,21 +2,44 @@
 que todos los procesos deben terminar su ejecución.
 Nota: ni los administrativos ni el director deben esperar a que se imprima el documento. **/
 
-chan colaImpresion(texto); //Administrativos envían documentos a esta cola de impresión
+chan pedido(texto); //Administrativos envían documentos a esta cola de impresión
+chan colaImpresora[3](texto); //Cola privada de cada Impresora
 
 Process Administrativo[id:0..N-1] {
-    texto doc; int cant_docs = 0;
-    while(cant_docs < 10) { //Imprime 10 documentos
+    texto doc; int limite = 10;
+    for i in 1..limite { //Imprime 10 documentos
         doc = generarDoc();
-        send(colaImpresion(doc)); //Envía documento a imprimir
+        send(pedido(doc)); //Envía documento a imprimir
     }
 }
 
 Process Impresora[id:0..2] {
-    texto doc; int cant_impresiones = 0, limite = N*10;
-    while(cant_impresiones < limite) {
-        receive(colaImpresion(doc)); //Espera a que haya un documento a imprimir
-        imprimirDocumento(doc); //Imprime
-        cant_impresiones++; //Incrementa cantidad de documentos impresos
+    texto doc; boolean continuar = true;
+    while(continuar) {
+        receive(pedido(doc)); //Espera a que haya un documento a imprimir
+        if(doc <> "FIN") imprimirDocumento(doc); //Imprime
+        else continuar = false;
+    }
+}
+
+Process Coordinador {
+    int i, id; texto doc; int contador = 0;
+
+    while (contador < N*10) { //Sigue siendo BW esto no? :/ no se me ocurre cómo mejorarlo
+        if(not empty(pedido)) { //Si hay pedidos
+            receive(pedido(doc)); //Recibe el pedido
+            
+            //Envía pedido a alguna impresora (aleatoria entre las disponibles)
+            if(empty(colaImpresora[0])) -> send(colaImpresora[0](doc));
+            [] if(empty(colaImpresora[1])) -> send(colaImpresora[1](doc));
+            [] if(empty(colaImpresora[2])) -> send(colaImpresora[2](doc));
+            end if
+
+            contador++;
+        }
+    }
+
+    for i in 0..2 {
+        send(colaImpresora[i]("FIN"));
     }
 }
