@@ -5,12 +5,14 @@ Nota: ni los administrativos ni el director deben esperar a que se imprima el do
 chan pedidos(texto); //Administrativos envían documentos a esta cola de impresión
 chan pedidosConPrioridad(texto); //Director envía sus documentos a esta cola prioritaria
 chan colaImpresora[3](texto); //Cola privada de cada Impresora
+chan Signal; //Administrativos y director avisan que necesitan usar la impresora
 
 Process Administrativo[id:0..N-1] {
     int i; texto doc;
     for i in 1..10 { //Imprime 10 documentos
         doc = generarDoc();
         send(pedido(doc)); //Envía documento a imprimir
+        send Signal(); //Avisa que necesita imprimir
     }
 }
 
@@ -19,6 +21,7 @@ Process Director {
     for i in 1..10 { //Imprime 10 documentos
         doc = generarDoc();
         send(pedido(doc)); //Envía documento a imprimir
+        send Signal(); //Avisa que necesita imprimir
     }
 }
 
@@ -34,8 +37,8 @@ Process Impresora[id:0..2] {
 Process Coordinador {
     int i, id; texto doc; int contador = 0;
 
-    while (contador < N*10+10) { //Sigue siendo BW esto no? :/ no se me ocurre cómo mejorarlo
-        
+    while (contador < N*10+10) {
+        receive Signal(); //Espera a que alguien necesite una impresora. Va a entrar si o si al if-[]
         if(not empty(pedidosConPrioridad)) ->
             receive(pedidoConPrioridad(doc)); //Recibe el pedido prioritario
             
@@ -44,8 +47,6 @@ Process Coordinador {
             [] if(empty(colaImpresora[1])) -> send(colaImpresora[1](doc));
             [] if(empty(colaImpresora[2])) -> send(colaImpresora[2](doc));
             end if
-
-            contador++;
 
         [] (empty(pedidosConPrioridad) and (not empty(pedidos)))-> //Si no tengo pedidos con prioridad pero tengo pedidos normales
             receive(pedido(doc)); //Recibe el pedido normal
@@ -56,9 +57,9 @@ Process Coordinador {
             [] if(empty(colaImpresora[2])) -> send(colaImpresora[2](doc));
             end if
 
-            contador++;
-        
         endif
+
+        contador++;
     }
 
     for i in 0..2 {
