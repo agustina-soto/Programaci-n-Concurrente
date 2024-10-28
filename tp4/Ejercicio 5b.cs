@@ -17,8 +17,7 @@ Process Administrativo[id:0..N-1] {
 Process Impresora[id:0..2] {
     texto doc;
     while(true) {
-        if(empty(colaImpresionPrioritaria)) ->
-            if(not empty(colaImpresion)) {
+        if(empty(colaImpresionPrioritaria) and (not empty(colaImpresion))) ->
                 receive(colaImpresion(doc)); //Si hay un doc en la cola no prioritaria, lo recibe
                 imprimirDocumento(doc); //Imprime
             }
