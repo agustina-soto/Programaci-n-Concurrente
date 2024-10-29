@@ -10,7 +10,7 @@ b) Implemente una solución con PMS sin tener en cuenta el orden de los pedidos.
 c) Modifique el inciso (b) para que el Analizador resuelva los pedidos en el orden
 en que se hicieron. **/
 
-a,b,c)
+a,b,c) Lo resolví teniendo en cuenta el orden de los pedidos.
 Process Examinador[id:0..R-1] {
     texto sitioWeb;
     while(true) {
