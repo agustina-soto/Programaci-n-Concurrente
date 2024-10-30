@@ -11,7 +11,7 @@ Process Espectadores [id:0..E-1] {
     Admin!fin(); //Avisa que terminó de usar la máquina
 }
 
-Process Buffer {
+Process Admin {
     int i, idE, cantP = 0; cola buffer; boolean maquinaLibre = true;
 
     do (cantP < E); Espectador[*]?llegada(idE) -> //Espera para recibir el id de un nuevo espectador
