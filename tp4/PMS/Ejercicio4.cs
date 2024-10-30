@@ -13,7 +13,7 @@ Process Empleado {
     for i in 0..P-1 {
         Persona[*]?llegada(idPersona); //Espera a que llegue una persona
         Persona[idPersona]!accesoSimulador(); //Permite acceso al simulador
-        Persona?fin(); //Espera a que la persona idPersona termine de usar el simulador
+        Persona[idPersona]?fin(); //Espera a que la persona idPersona termine de usar el simulador
     }
 }
 
@@ -33,7 +33,7 @@ Process Empleado {
         Admin!disponible(); //Avisa al admin que se encuentra disponible
         Admin?siguienteTurno(idPersona); //Espera a que admin le diga quién es la persona que sigue
         Persona[idPersona]!accesoSimulador(); //Permite acceso al simulador a una persona
-        Persona?fin(); //Espera a que la persona termine de usar el simulador
+        Persona[idPersona]?fin(); //Espera a que la persona termine de usar el simulador
     }
 }
 
