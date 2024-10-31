@@ -16,7 +16,7 @@ Process Administrativo[id:0..N-1] {
 Process Impresora[id:0..2] {
     texto doc; boolean continuar = true;
     while(continuar) {
-        receive(pedido(doc)); //Espera a que haya un documento a imprimir
+        receive(colaImpresora[id](doc)); //Espera a que haya un documento a imprimir en mi cola de impresión
         if(doc <> "FIN") imprimirDocumento(doc); //Si es válido lo imprime, sino corta la ejecución del proceso
         else continuar = false;
     }
