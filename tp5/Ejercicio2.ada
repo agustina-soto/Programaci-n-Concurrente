@@ -17,7 +17,7 @@ a) Los clientes solo se retiran despues de que son atendidos.
 Procedure BancoA is
 
     TASK Empleado is
-        ENTRY atender();
+        ENTRY atender(comprobante: OUT texto);
     END Empleado;
 
     TASK TYPE Cliente;
