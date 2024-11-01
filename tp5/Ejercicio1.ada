@@ -1,10 +1,12 @@
--- Se requiere modelar un puente de un único sentido que soporta hasta 5 unidades de peso. --
--- El peso de los vehículos depende del tipo: cada auto pesa 1 unidad, cada camioneta pesa 2 unidades y cada camión 3 unidades. --
--- Suponga que hay una cantidad innumerable de vehículos (A autos, B camionetas y C camiones). --
--- Analice el problema y defina qué tareas, recursos y sincronizaciones serán necesarios/convenientes para resolverlo. --
+-- Se requiere modelar un puente de un único sentido que soporta hasta 5 unidades de peso.
+-- El peso de los vehículos depende del tipo: cada auto pesa 1 unidad, cada camioneta pesa 2 unidades y cada camión 3 unidades.
+-- Suponga que hay una cantidad innumerable de vehículos (A autos, B camionetas y C camiones).
+-- Analice el problema y defina qué tareas, recursos y sincronizaciones serán necesarios/convenientes para resolverlo.
+-- a. Realice la solución suponiendo que todos los vehículos tienen la misma prioridad.
+-- b. Modifique la solución para que tengan mayor prioridad los camiones que el resto de los vehículos.
 
 
--- a. Todos los vehículos tienen la misma prioridad. --
+-- a. Todos los vehículos tienen la misma prioridad.
 
 Procedure Puente is
 
@@ -77,4 +79,74 @@ END Puente;
 
 
 
--- b. Los camiones tienen mayor tienen mayor prioridad que el resto de los vehículos. --
+-- b. Los camiones tienen mayor tienen mayor prioridad que el resto de los vehículos.
+    -- NOTA: asumo que la prioridad se extiende a: si hay un camion esperando y no hay lugar para él, espero a que haya lugar.
+
+Procedure PuenteB is
+
+    TASK Admin is
+        ENTRY entrarAuto();
+        ENTRY salirAuto();
+        ENTRY entrarCamioneta();
+        ENTRY salirCamioneta();
+        ENTRY entrarCamion();       -- Prioridad
+        ENTRY salirCamion();
+    END Admin;
+
+    TASK TYPE Auto;
+    TASK TYPE Camioneta;
+    TASK TYPE Camion;
+
+    arregloAutos = ARRAY(1..A) OF Auto;
+    arregloCamionetas = ARRAY(1..B) OF Camioneta;
+    arregloCamiones = ARRAY(1..C) OF Camion;
+
+    TASK BODY Auto is
+        Admin.entrarAuto();
+        pasarPuente();
+        Admin.salirAuto();
+    END Auto;
+
+    TASK BODY Camioneta is
+        Admin.entrarCamioneta();
+        pasarPuente();
+        Admin.salirCamioneta();
+    END Camioneta;
+
+    TASK BODY Camion is
+        Admin.entrarCamion();
+        pasarPuente();
+        Admin.salirCamion();
+    END Camion;
+
+    TASK BODY Admin is
+        unidades_ocupadas: integer := 0;  -- Inicia con el puente libre (0 unidades de peso)
+    BEGIN
+        loop
+            SELECT
+            ---- Entradas ----
+                WHEN (entrarCamion'count = 0) AND (unidades_ocupadas <= 4)  =>  accept entrarAuto(); -- Sin pedidos de camion
+                                                                                unidades_ocupadas++;
+            OR
+                WHEN (entrarCamion'count = 0) AND (unidades_ocupadas <= 3)  =>  accept entrarCamioneta(); -- Sin pedidos de camion
+                                                                                unidades_ocupadas := unidades_ocupadas + 2;
+            OR
+                WHEN (unidades_ocupadas <= 2)                               =>  accept entrarCamion(); -- Con pedidos de camion
+                                                                                unidades_ocupadas := unidades_ocupadas + 3;
+            OR
+            ---- Salidas ----
+                accept salirAuto();
+                unidades_ocupadas--;  -- Libera 1 unidad para un auto
+            OR
+                accept salirCamioneta();
+                unidades_ocupadas := unidades_ocupadas -2;  -- Libera 2 unidades para una camioneta
+            OR
+                accept salirCamion();
+                unidades_ocupadas := unidades_ocupadas -3;  -- Libera 3 unidades para un camion
+            END SELECT
+        END loop;
+    END Admin;
+
+BEGIN
+    null;
+END PuenteB;
