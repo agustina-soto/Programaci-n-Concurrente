@@ -12,7 +12,7 @@
 -- y se retiran si no son atendidos inmediatamente.
 
 
-a) Los clientes solo se retiran despues de que son atendidos.
+-- a) Los clientes solo se retiran despues de que son atendidos.
 
 Procedure BancoA is
 
