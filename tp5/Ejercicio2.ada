@@ -46,3 +46,44 @@ Procedure BancoA is
 Begin
     null;
 End BancoA;
+
+
+
+-- b) Los clientes se retiran si esperan más de 10 minutos para realizar el pago.
+
+Procedure BancoB is
+
+    TASK Empleado is
+        ENTRY atender();
+    END Empleado;
+
+    TASK TYPE Cliente;
+    arregloClientes = ARRAY(1..C) OF Cliente;
+
+
+    -- TASK BODY's --
+
+    TASK BODY Cliente is
+        comprobante: texto;
+    BEGIN
+        SELECT
+            Empleado.atender(comprobante); -- Espera a que lo atiendan
+            -- Es atendido, paga y le dan un comprobante
+        OR DELAY 600 -- Si no hay hay accept inmediatamente, espera 600 segundos; cumplidos, si no hay accept, ejecuta null
+            null;
+        END SELECT;
+    END Cliente;
+
+    TASK BODY Empleado is
+    BEGIN
+        loop
+            accept atender(OUT comprobante) do
+                comprobante = cobrarAlCliente();
+            END atender;
+        END loop;
+    END Empleado;
+
+Begin
+    null;
+End BancoB;
+
