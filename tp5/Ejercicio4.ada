@@ -35,23 +35,21 @@ Procedure Clinica is
     
     -- TASK BODY's --
     TASK BODY Medico is
-        sintomas, peticion, nota: texto;
+        nota: texto;
     BEGIN
         loop
             SELECT
-                Accept AtencionPersona(s: IN texto) do
-                    sintomas = s;
+                Accept AtencionPersona(sintomas: IN texto) do
+                    atenderPersona(sintomas);
                 END AtencionPersona;
-                atenderPersona(sintomas);
             OR
                 WHEN (AtencionPersona'count = 0)  =>    -- Solo lo va a hacer si no hay personas esperando atencion
-                                                        Accept AtencionEnfermera(p: IN texto) do
-                                                            peticion = p;
+                                                        Accept AtencionEnfermera(peticion: IN texto) do
+                                                            procesarPeticion(peticion);
                                                         END AtencionEnfermera;
-                                                        procesarPeticion(peticion);
             ELSE  -- Si no hay pacientes esperando ni enfermeras que requieran atencion, se procesa una nota dejada en el consultorio (si la hay).
                 SELECT  -- Si hay una nota, la toma y resuelve la peticion
-                    Consultorio.agarrarNota(nota);
+                    Consultorio.agarrarNota(nota);  -- Intenta agarrar una nota (si no la hay, no entra al select)
                     resolverPeticion(nota);
                 ELSE
                     null;
