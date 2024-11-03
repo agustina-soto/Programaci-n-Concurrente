@@ -69,7 +69,8 @@ Procedure LimpiezaResiduos;
             OR
                 WHEN(totalReclamos > 0) =>  -- Sólo entra cuando hay reclamos pendientes por camiones
                     Accept CamionDisponible(idP: OUT integer) do
-                        idP := obtenerMaximo(arregloContadorReclamos);
+                        idP := obtenerIdMax(arregloContadorReclamos);  -- Devuelve la posición del máximo
+                        totalReclamos := totalReclamos - arregloContadorReclamos(idP);  -- Decrementa la cantidad de reclamos tantas veces como el cliente recién atendido haya reclamado
                         arregloContadorReclamos(idP) := 0;  -- Reinicializa el contador de reclamos de la persona idP
                 END CamionDisponible;
             END SELECT;
