@@ -54,7 +54,7 @@ Procedure SistemaReconocimiento is
     BEGIN
         loop
             Especialista.PedidoHuella(huella);  -- Espera a que el Especialista le devuelva una huella
-            Buscar(huella, codigo, valor);  -- Busca la huella recibida
+            Buscar(huella, codigo, valor);  -- Busca en su BD una huella similar
             Especialista.RecibirResultado(codigo, valor);  -- Envía a Especialista el codigo y el valor de la huella enviada
         END loop;
     END Servidor;
