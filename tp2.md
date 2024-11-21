@@ -51,7 +51,7 @@ c. Modifique su solución para el caso que haya tres detectores.
 
     Process Persona [id: 0..N-1] {
         int i, cant_chequeos = get_cant_random_int(); // Obtengo un numero entero de veces en la que es chequeada la persona [id]
-        for i = 1..N {
+        for i = 1..cant_chequeos {
             P(mutex_detector);
             // uso el detector
             V(mutex_detector);    
