@@ -1076,30 +1076,27 @@ sem mutex = 1, mutex_cola[3] = ([3] 1), mutex_hisopar = 1;
 sem espera_persona[150] = ([150] 0), ocupada[3] = ([3] 0);
 
 Process Pasajero[id:0..149]{
-    int puesto;
     P(mutex);
-    puesto = PuestoConMenosPasajeros();
+    int puesto = PuestoConMenosPasajeros();
     V(mutex);
-    P(mutex_cola[cola])
-    cola_espera[cola].push(id);
-    V(mutex_cola[cola])
-    V(ocupada[cola]);
+    P(mutex_cola[puesto])
+    cola_espera[puesto].push(id);
+    V(mutex_cola[puesto])
+    V(ocupada[puesto]);
 
     P(espera_persona[id]);
     // Está siendo hisopado
-    P(espera_persona[id]);
 }
 
 Process Enfermera[id:0..2]{
     int pasajero;
     int j;
     while(cantP < 150){
-        P(ocupada[i]);
+        P(ocupada[id]);
         if (!cola_espera[id].isEmpty()){
             P(mutex_cola[id]);
             pasajero = cola_espera[id].pop();
             V(mutex_cola[id]);
-            V(espera_persona[pasajero]);
             Hisopar(pasajero);
             V(espera_persona[pasajero]);
             P(mutex_hisopar);
