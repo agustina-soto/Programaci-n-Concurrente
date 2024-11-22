@@ -30,3 +30,34 @@ Process Persona [id:0..P-1] {
     end if;
     V(mutex);
 }
+
+
+b)
+Cola colaEspera[P];
+Cola colaTerminales[T] = (0, 1, 2, ..., T-1);
+sem mutex = 1;
+sem espera_turno[P] = ([P] 0);
+int t_libre = T;
+
+Process Persona [id:0..P-1] {
+    P(mutex);
+    if(t_libre > 0) -> libres--; V(mutex);  //Si hay terminales libres
+    [] if(t_libre == 0) ->  //Si no hay terminales libres
+        colaEspera.push(id);
+        V(mutex);
+        P(espera_turno[id]);
+    end if;
+
+    P(mutex_terminales);
+    Terminal t = colaTerminales.pop();
+    V(mutex_terminales);
+    UsarTerminal(t);
+    P(mutex_terminales);
+    colaTerminales.push(t);
+    V(mutex_terminales);
+
+    P(mutex);
+    if(colaEspera.isEmpty()) -> t_libre++;
+    [] if(!colaEspera.isEmpty()) -> V(espera_turno[colaEspera.pop()]);
+    V(mutex);
+}
