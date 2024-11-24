@@ -287,7 +287,9 @@ Monitor Puente {
             esperando--;
             signal(espera);
         }
-        else libre = true;  //Si no hy nadie esperando, actualiza el estado de libre para que el proximo vehiculo que intente entrar, pase directamente a consultar si le da el peso para entrar ya
+        /* Si no hay nadie esperando, actualiza el estado de libre para que el proximo vehiculo que intente entrar pase directamente 
+        a consultar si le da el peso para entrar ya */
+        else libre = true;
     }
 
     Procedure salida(p: IN real) {
