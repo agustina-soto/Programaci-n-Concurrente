@@ -250,17 +250,61 @@ Process Empleado {
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  
+/* 4) Existen N vehículos que deben pasar por un puente de acuerdo con el orden de llegada.
+Considere que el puente no soporta más de 50000kg y que cada vehículo cuenta con su propio
+peso (ningún vehículo supera el peso soportado por el puente). */
+
+Process Vehiculo[id:0..N-1] {
+    real peso = getPeso();
+    Puente.entrada(peso);
+    cruzandoPuente();
+    Puente.salida(peso);
+}
+
+Monitor Puente {
+    cond espera, pesoExcedido;
+    int pesoAcumulado = 0, esperando = 0;
+    boolean libre = true;
+
+    Procedure entrada(peso: IN real) {
+        if(!libre) {
+            esperando++;
+            wait(espera);
+        }
+        else libre = false;
+
+        //Hay alguien queriendo pasar
+        
+        /* Si se supera el peso maximo, se duerme al proceso para que el/los otros procesos que esten transitando el puente se vayan
+        y permitan mas peso sobre el mismo (porque se sabe que ningun vehiculo supera el peso soportado por el puente) */
+        while(pesoAcumulado + peso > 50000) {
+            wait(pesoExcedido);
+        }
+
+        //Puede pasar
+        pesoAcumulado += peso;
+        if(esperando > 0) {  //Si hay alguien esperando, decrementa la cantidad y despierta al primero de la cola
+            esperando--;
+            signal(espera);
+        }
+        else libre = true;  //Si no hy nadie esperando, actualiza el estado de libre para que el proximo vehiculo que intente entrar, pase directamente a consultar si le da el peso para entrar ya
+    }
+
+    Procedure salida(p: IN real) {
+        pesoAcumulado -= p;  //Decremento el peso acumulado que estaria transitando el puente
+        signal(pesoExcedido);  //Despierta (avisa) al primer proceso encolado para que rechequee si le da el peso para ingresar
+    }
+}
 
 
 
 
 
 
-  
 
 
 
 
 
-  
+
+
