@@ -49,7 +49,7 @@ Process Usuario[id:0..U-1] {
 }
 
 Process Repositor {
-    for int i in 1 to U {
+    while(true) {
         P(avisar_repositor);
         P(mutex_latas);
         latas_disponibles.push(100);
